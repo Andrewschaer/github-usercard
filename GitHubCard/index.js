@@ -16,7 +16,7 @@ import axios from 'axios';
 */
 
 // STEP 2: COMPLETE
-  // {
+//   const sample = {
 //     "login": "Andrewschaer",
 //     "id": 24277559,
 //     "node_id": "MDQ6VXNlcjI0Mjc3NTU5",
@@ -55,6 +55,15 @@ import axios from 'axios';
   STEP 4: Pass the data received from Github into your function,
     and append the returned markup to the DOM as a child of .cards
 */
+const cards = document.querySelector('.cards')
+
+axios.get(`https://api.github.com/users/andrewschaer`)
+  .then(response => {
+    const gitHubCard = gitHubCardMaker(response.data)
+    cards.appendChild(gitHubCard)
+  })
+  .catch(err => console.group(err.message))
+  .finally(() => console.group('done'))
 
 /*
   STEP 5: Now that you have your own card getting added to the DOM, either
@@ -67,7 +76,17 @@ import axios from 'axios';
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = ['tetondan', 'dustinmyers', 'justsml', 'luishrd', 'bigknell'];
+
+followersArray.forEach( item => {
+  axios.get(`https://api.github.com/users/${item}`)
+  .then(response => {
+    const gitHubCard = gitHubCardMaker(response.data)
+    cards.appendChild(gitHubCard)
+  })
+  .catch(err => console.group(err.message))
+  .finally(() => console.group('done'))
+})
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -117,10 +136,18 @@ function gitHubCardMaker (singleObject) {
   cardFollowing.textContent = `Following: ${singleObject.following}`
   cardBio.textContent = `Bio: ${singleObject.bio}`
   // creating the hierarchy
-  
-
-
-
+  gitHubCard.appendChild(cardImage)
+  gitHubCard.appendChild(cardInfo)
+  cardInfo.appendChild(cardName)
+  cardInfo.appendChild(cardUserName)
+  cardInfo.appendChild(cardLocation)
+  cardInfo.appendChild(cardProfile)
+  cardProfile.appendChild(cardLinkProfile)
+  cardInfo.appendChild(cardFollowers)
+  cardInfo.appendChild(cardFollowing)
+  cardInfo.appendChild(cardBio)
+  // never forget to return!
+  return gitHubCard
 }
 
 /*
